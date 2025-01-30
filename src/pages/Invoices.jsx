@@ -69,3 +69,5 @@ const Invoices = () => {
     </Container>
   );
 };
+
+export default Invoices;

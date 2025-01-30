@@ -50,3 +50,6 @@ const Dashboard = () => {
     </Grid>
   );
 };
+
+
+export default Dashboard;

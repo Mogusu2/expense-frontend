@@ -57,3 +57,5 @@ const Budgets = () => {
     </Container>
   );
 };
+
+export default Budgets;

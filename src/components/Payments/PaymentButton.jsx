@@ -1,6 +1,7 @@
 // src/components/Payments/PaymentButton.jsx
 import { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select } from '@mui/material';
+import PropTypes from 'prop-types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
 
 const PaymentButton = ({ invoice }) => {
@@ -64,3 +65,10 @@ const PaymentButton = ({ invoice }) => {
     </>
   );
 };
+PaymentButton.propTypes = {
+  invoice: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+export default PaymentButton;
