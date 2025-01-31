@@ -12,8 +12,8 @@ import {
   CircularProgress
 } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
+//import axios from 'axios';
+//import { jwtDecode } from "jwt-decode";
 ;
 
 const validationSchema = Yup.object({
@@ -25,19 +25,7 @@ export default function Login() {
   const { login } = useAuth();
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
 
-  const storeToken = (token) => {
-    try {
-      if (typeof window !== "undefined" && window.localStorage) {
-        localStorage.setItem("token", token);
-      } else {
-        console.error("localStorage is not available in this context.");
-      }
-    } catch (error) {
-      console.error("Error accessing localStorage:", error);
-    }
-  };
 
 
 
@@ -51,55 +39,14 @@ export default function Login() {
     onSubmit: async (values, { setSubmitting }) => {
       setError('');
       setIsSubmitting(true);
-  
+      
       try {
-        const response = await axios.post('http://localhost:5000/login', values, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-  
-        if (response.status === 200) {
-          const { access_token } = response.data;
-  
-          // Store the token in localStorage
-          storeToken(access_token);
-  
-          // Decode the token to get user info
-          const decoded = jwtDecode(access_token);
-  
-          // Update the auth context
-          login({
-            id: decoded.id,
-            username: decoded.username,
-            role: decoded.role
-          });
-  
-          // Redirect based on the user's role or default to dashboard
-          let redirectPath = '/dashboard'; // Default redirect path
-  
-          switch (decoded.role) {
-            case 'admin':
-              redirectPath = '/admin';
-              break;
-            case 'manager':
-              redirectPath = '/budget'; // Assuming managers might go to budget first
-              break;
-            case 'employee':
-              redirectPath = '/expenses'; // Or any other relevant page
-              break;
-            default:
-              // If no specific role matches, redirect to the default dashboard
-              break;
-          }
-  
-          navigate(redirectPath);
-        }
+        // Use auth.login() instead of direct Axios call
+        await login(values);
       } catch (err) {
-        console.error('Login error:', err);
         setError(err.response?.data?.message || 'Login failed');
       } finally {
-        setSubmitting(false); // Crucial for form reset
+        setSubmitting(false);
         setIsSubmitting(false);
       }
     }
