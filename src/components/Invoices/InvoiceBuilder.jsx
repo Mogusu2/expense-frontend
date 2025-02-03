@@ -1,4 +1,3 @@
-// src/components/Invoices/InvoiceForm.jsx
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -30,9 +29,9 @@ const validationSchema = Yup.object({
   ).min(1, 'At least one item required')
 });
 
-export default function InvoiceForm({ open, onClose, onInvoiceCreated }) {
+export default function InvoiceBuilder({ open = false, onClose = () => {}, onInvoiceCreated = () => {} }) {
   const [submitting, setSubmitting] = useState(false);
-  
+
   const formik = useFormik({
     initialValues: {
       client_name: '',
@@ -40,39 +39,30 @@ export default function InvoiceForm({ open, onClose, onInvoiceCreated }) {
       items: [{ description: '', amount: '' }]
     },
     validationSchema,
-      onSubmit: async (values) => {
-        setSubmitting(true);
-        try {
-          const { data } = await axios.post('/api/invoices', 
-            {
-              client_name: values.client_name,
-              client_email: values.client_email,
-              items: values.items.map(item => ({
-                description: item.description,
-                amount: parseFloat(item.amount)
-              }))
-          });
+    onSubmit: async (values) => {
+      setSubmitting(true);
+      try {
+        const { data } = await axios.post('http://localhost:5000/invoices', {
+          client_name: values.client_name,
+          client_email: values.client_email,
+          items: values.items.map(item => ({
+            description: item.description,
+            amount: parseFloat(item.amount)
+          }))
+        });
 
+        if (data) {
           onInvoiceCreated(data);
           onClose();
-        } catch (error) {
-          console.error('Invoice creation failed:', error);
-        } finally {
-          setSubmitting(false);
         }
+      } catch (error) {
+        console.error('Invoice creation failed:', error);
+      } finally {
+        setSubmitting(false);
       }
+    }
   });
 
-  InvoiceForm.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onInvoiceCreated: PropTypes.func.isRequired
-  };
-
-  const totalAmount = formik.values.items.reduce(
-    (sum, item) => sum + (parseFloat(item.amount) || 0),
-    0
-  );
 
   const handleAddItem = () => {
     formik.setFieldValue('items', [...formik.values.items, { description: '', amount: '' }]);
@@ -116,9 +106,7 @@ export default function InvoiceForm({ open, onClose, onInvoiceCreated }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Invoice Items
-              </Typography>
+              <Typography variant="h6" gutterBottom>Invoice Items</Typography>
               
               {formik.values.items.map((item, index) => (
                 <Grid container spacing={2} key={index} alignItems="center">
@@ -129,14 +117,8 @@ export default function InvoiceForm({ open, onClose, onInvoiceCreated }) {
                       name={`items[${index}].description`}
                       value={item.description}
                       onChange={formik.handleChange}
-                      error={
-                        formik.touched.items?.[index]?.description && 
-                        Boolean(formik.errors.items?.[index]?.description)
-                      }
-                      helperText={
-                        formik.touched.items?.[index]?.description && 
-                        formik.errors.items?.[index]?.description
-                      }
+                      error={formik.touched.items?.[index]?.description && Boolean(formik.errors.items?.[index]?.description)}
+                      helperText={formik.touched.items?.[index]?.description && formik.errors.items?.[index]?.description}
                     />
                   </Grid>
                   
@@ -148,14 +130,8 @@ export default function InvoiceForm({ open, onClose, onInvoiceCreated }) {
                       type="number"
                       value={item.amount}
                       onChange={formik.handleChange}
-                      error={
-                        formik.touched.items?.[index]?.amount && 
-                        Boolean(formik.errors.items?.[index]?.amount)
-                      }
-                      helperText={
-                        formik.touched.items?.[index]?.amount && 
-                        formik.errors.items?.[index]?.amount
-                      }
+                      error={formik.touched.items?.[index]?.amount && Boolean(formik.errors.items?.[index]?.amount)}
+                      helperText={formik.touched.items?.[index]?.amount && formik.errors.items?.[index]?.amount}
                     />
                   </Grid>
                   
@@ -169,37 +145,26 @@ export default function InvoiceForm({ open, onClose, onInvoiceCreated }) {
                 </Grid>
               ))}
               
-              <Button
-                startIcon={<AddIcon />}
-                onClick={handleAddItem}
-                sx={{ mt: 2 }}
-              >
+              <Button startIcon={<AddIcon />} onClick={handleAddItem} sx={{ mt: 2 }}>
                 Add Item
               </Button>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="h6" sx={{ textAlign: 'right' }}>
-                Total: ${totalAmount.toFixed(2)}
-              </Typography>
             </Grid>
           </Grid>
         </Box>
       </DialogContent>
       
       <DialogActions>
-        <Button onClick={onClose} disabled={submitting}>
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          onClick={formik.handleSubmit}
-          disabled={submitting || !formik.isValid}
-        >
+        <Button onClick={onClose} disabled={submitting}>Cancel</Button>
+        <Button type="submit" variant="contained" onClick={formik.handleSubmit} disabled={submitting || !formik.isValid}>
           {submitting ? 'Creating...' : 'Create Invoice'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
+
+InvoiceBuilder.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  onInvoiceCreated: PropTypes.func
+};
