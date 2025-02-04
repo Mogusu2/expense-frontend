@@ -2,14 +2,14 @@ import { Box, Typography, Button, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Floating icons data
 const symbols = ["💰", "📊", "📈", "💲", "Ksh", "€", "%", "💹"];
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth(); // Accessing user data and redirectPath
   const [isVisible, setIsVisible] = useState(true);
 
   const handleNavigate = (path) => {
@@ -18,6 +18,14 @@ const Home = () => {
       navigate(path);
     }, 600); // Delay navigation to allow animation to complete
   };
+
+  useEffect(() => {
+    // Redirect only if the user is logged in
+    if (user) {
+      // If the user is logged in, redirect based on the user role
+      navigate(`/dashboard/${user.role}`);
+    }
+  }, [user, navigate]);
 
   return (
     <Box
@@ -91,31 +99,32 @@ const Home = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.5 }}
                 >
-                  
+                  {/* Placeholder for any extra content you want to display */}
                 </motion.div>
               )}
+
+              <Box sx={{ marginTop: 3 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ margin: 1, width: "120px" }}
+                  onClick={() => handleNavigate("/login")}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ margin: 1, width: "120px" }}
+                  onClick={() => handleNavigate("/register")}
+                >
+                  Register
+                </Button>
+              </Box>
             </>
           ) : (
             <Typography variant="h6" color="success.main">
-              Please Login if not Register to access your Dashboardv
-              <Box sx={{ marginTop: 3 }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      sx={{ margin: 1, width: "120px" }}
-                      onClick={() => handleNavigate("/login")}
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      sx={{ margin: 1, width: "120px" }}
-                      onClick={() => handleNavigate("/register")}
-                    >
-                      Register
-                    </Button>
-                  </Box>
+              Please Login or Register to access your Dashboard.
             </Typography>
           )}
         </Paper>

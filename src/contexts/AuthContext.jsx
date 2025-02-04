@@ -66,11 +66,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("access_token", response.data.access_token);
       decodeAndSetUser(response.data.access_token);
 
-      // Redirect to the dashboard based on the user role or the redirectPath if set
-      const path = redirectPath || `/dashboard/${response.data.user?.role}`;
+      // Redirect to the dashboard based on the user role
+      const path = `/dashboard/${response.data.user?.role}`;
       setRedirectPath("/"); // Reset redirectPath after using it
+
       setTimeout(() => {
-        navigate(path);
+        navigate(path);  // Ensure the navigation happens after the user is set
       }, 100); // Small delay to ensure state updates
     } catch (error) {
       console.error("Login error:", error.message);
