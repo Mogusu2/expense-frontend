@@ -23,16 +23,15 @@ export const AuthProvider = ({ children }) => {
     try {
       const decoded = jwtDecode(token);
       console.log("Decoded token:", decoded);
-  
-      // Check if user info is in `sub` or another field
-      const userData = decoded.sub || decoded.user || decoded;
-  
+
+      const userData = decoded.sub || decoded;
+
       if (!userData?.role) {
         console.error("Invalid token: missing role");
         logout();
         return;
       }
-  
+
       setUser({
         id: userData.id || null,
         username: userData.username || "",
@@ -43,36 +42,36 @@ export const AuthProvider = ({ children }) => {
       logout();
     }
   }, [logout]);
-  
 
   // Updated login function
-  const login = async (username, password) => {
+  const login = async (credentials) => {
     try {
-      const response = await axios.post('http://localhost:5000/login', {
-        username,
-        password
+      console.log("Attempting login with:", credentials);
+
+      const response = await axios.post("http://localhost:5000/login", credentials, {
+        headers: { "Content-Type": "application/json" },
+        validateStatus: (status) => status < 500, // Avoid throwing errors for client-side (400s)
       });
-  
-      // Validate response structure
-      if (!response.data.access_token || !response.data.user) {
-        throw new Error('Invalid server response format');
+
+      console.log("Login response:", response);
+
+      if (response.status === 401) {
+        throw new Error("Incorrect username or password.");
       }
-  
-      // Store authentication data
-      localStorage.setItem('access_token', response.data.access_token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      
-      // Set default axios headers
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-  
-      return response.data.user;
-    } catch (err) {
-      // Handle specific error cases
-      let errorMessage = 'Login failed';
-      if (err.response) {
-        errorMessage = err.response.data.message || errorMessage;
+
+      if (response.status !== 200 || !response.data?.access_token) {
+        throw new Error("Unexpected login response.");
       }
-      throw new Error(errorMessage);
+
+      localStorage.setItem("access_token", response.data.access_token);
+      decodeAndSetUser(response.data.access_token);
+
+      setTimeout(() => {
+        navigate(`/dashboard/${response.data.user?.role}`);
+      }, 100); // Small delay to ensure state updates
+    } catch (error) {
+      console.error("Login error:", error.message);
+      throw error;
     }
   };
 
