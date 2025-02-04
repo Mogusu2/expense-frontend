@@ -38,29 +38,34 @@ export const BudgetProvider = ({ children }) => {
   };
 
   // Function to fetch budgets from the backend
-  const fetchBudgets = async () => {
-    try {
-      const token = localStorage.getItem('access_token');
-      if (!token) {
-        console.error("No access token found, redirecting...");
-        navigate('/login');
-        return;
+  useEffect(() => {
+    const fetchBudgets = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          console.error("No access token found, redirecting...");
+          navigate('/login');
+          return;
+        }
+    
+        console.log("Fetching budgets from: http://localhost:5000/budgets");
+    
+        const { data } = await axios.get('http://localhost:5000/budgets', {
+          headers: { Authorization: `Bearer ${token}` },
+          data: null // <== Ensures no body is sent
+        });
+    
+        console.log("Fetched budgets:", data);
+        setBudgets(data);
+      } catch (error) {
+        console.error('Failed to fetch budgets:', error.response?.data || error);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      console.log("Fetching budgets from: http://localhost:5000/budgets");
-
-      const { data } = await axios.get('http://localhost:5000/budgets', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      console.log("Fetched budgets:", data);
-      setBudgets(data);
-    } catch (error) {
-      console.error('Failed to fetch budgets:', error.response?.data || error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchBudgets();
+  }, [navigate]);
 
   // Function to update a budget
   const updateBudget = async (id, updatedBudget) => {
@@ -112,10 +117,7 @@ export const BudgetProvider = ({ children }) => {
     }
   };
 
-  // Fetch budgets on component mount
-  useEffect(() => {
-    fetchBudgets();
-  }, []);
+ 
 
   return (
     <BudgetContext.Provider value={{ budgets, loading, addBudget, updateBudget, deleteBudget }}>
