@@ -8,7 +8,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [redirectPath, setRedirectPath] = useState("/"); // Fixed redirect state
+  const [redirectPath, setRedirectPath] = useState("/"); // Default redirect path
   const navigate = useNavigate();
 
   // Logout function
@@ -66,12 +66,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("access_token", response.data.access_token);
       decodeAndSetUser(response.data.access_token);
 
-      // Redirect to the dashboard based on the user role
-      const path = `/dashboard/${response.data.user?.role}`;
-      setRedirectPath("/"); // Reset redirectPath after using it
-
       setTimeout(() => {
-        navigate(path);  // Ensure the navigation happens after the user is set
+        navigate(`/dashboard/${response.data.user?.role}`);
       }, 100); // Small delay to ensure state updates
     } catch (error) {
       console.error("Login error:", error.message);
@@ -82,7 +78,9 @@ export const AuthProvider = ({ children }) => {
   // Check token on mount
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    if (token) decodeAndSetUser(token);
+    if (token) {
+      decodeAndSetUser(token);
+    }
   }, [decodeAndSetUser]);
 
   return (

@@ -20,9 +20,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // Redirect only if the user is logged in
+    // Redirect to appropriate dashboard if the user is logged in
     if (user) {
-      // If the user is logged in, redirect based on the user role
       navigate(`/dashboard/${user.role}`);
     }
   }, [user, navigate]);
