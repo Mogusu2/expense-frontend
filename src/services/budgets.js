@@ -1,7 +1,7 @@
 // src/services/budgets.js
 import axios from "axios";
 
-const API_URL = "https://management-tool-1.onrender.com/budgets";
+const API_URL = "http://localhost:5000/budgets";
 
 class BudgetService {
   static async getBudgets(token) {

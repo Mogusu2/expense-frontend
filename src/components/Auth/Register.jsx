@@ -35,7 +35,7 @@ export default function Register() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('https://management-tool-1.onrender.com/register', values);
+        const response = await axios.post('http://localhost:5000/register', values);
         
         if (response.status === 201) {
           navigate('/login'); // Redirect to login after successful registration

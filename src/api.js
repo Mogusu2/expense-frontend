@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // Create axios instance
 const api = axios.create({
-  baseURL: 'https://management-tool-1.onrender.com'
+  baseURL: 'http://localhost:5000'
 });
 
 // Request interceptor

@@ -26,8 +26,8 @@ const FreelancerDashboard = () => {
     const fetchData = async () => {
       try {
         const [budgets, invoices] = await Promise.all([
-          api.get('https://management-tool-1.onrender.com/budgets'),
-          api.get('https://management-tool-1.onrender.com/invoices')
+          api.get('http://localhost:5000/budgets'),
+          api.get('http://localhost:5000/invoices')
         ]);
         
         setState(prev => ({
@@ -46,7 +46,7 @@ const FreelancerDashboard = () => {
 
   const handleAddBudget = async (categoryData) => {
     try {
-      const { data } = await api.post('https://management-tool-1.onrender.com/budgets', categoryData);
+      const { data } = await api.post('http://localhost:5000/budgets', categoryData);
       setState(prev => ({
         ...prev,
         budgets: [...prev.budgets, data]
@@ -59,7 +59,7 @@ const FreelancerDashboard = () => {
 
   const handleAddExpense = async (budgetId, expenseData) => {
     try {
-      const { data } = await api.post('https://management-tool-1.onrender.com/expenses', { 
+      const { data } = await api.post('http://localhost:5000/expenses', { 
         budget_id: budgetId,
         ...expenseData 
       });
@@ -79,7 +79,7 @@ const FreelancerDashboard = () => {
 
   const handleCreateInvoice = async (invoiceData) => {
     try {
-      const { data } = await api.post('https://management-tool-1.onrender.com/invoices', invoiceData);
+      const { data } = await api.post('http://localhost:5000/invoices', invoiceData);
       setState(prev => ({
         ...prev,
         invoices: [...prev.invoices, data]
@@ -93,7 +93,7 @@ const FreelancerDashboard = () => {
 
   const handlePayment = async (method, amount, invoiceId, phone) => {
     try {
-      const endpoint = method === 'mpesa' ? 'https://management-tool-1.onrender.com/payments/mpesa' : 'https://management-tool-1.onrender.com/payments/paypal';
+      const endpoint = method === 'mpesa' ? 'http://localhost:5000/payments/mpesa' : 'http://localhost:5000/payments/paypal';
       const { data } = await api.post(endpoint, {
         invoice_id: invoiceId,
         amount,

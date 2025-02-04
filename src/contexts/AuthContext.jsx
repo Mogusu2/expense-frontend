@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("Attempting login with:", credentials);
 
-      const response = await axios.post("https://management-tool-1.onrender.com/login", credentials, {
+      const response = await axios.post("http://localhost:5000/login", credentials, {
         headers: { "Content-Type": "application/json" },
         validateStatus: (status) => status < 500, // Avoid throwing errors for client-side (400s)
       });

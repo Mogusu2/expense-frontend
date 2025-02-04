@@ -23,7 +23,7 @@ const BudgetManager = ({ categories = [], onAddCategory = () => {}, onAddExpense
   
     try {
       const response = await axios.post(
-        'https://management-tool-1.onrender.com/budgets',
+        'http://localhost:5000/budgets',
         {
           category: newCategory.name,
           monthly_limit: Number(newCategory.limit),
