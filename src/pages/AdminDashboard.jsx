@@ -39,13 +39,13 @@ const AdminDashboard = () => {
       const token = localStorage.getItem("token");
 
       const [usersRes, budgetsRes, statsRes] = await Promise.all([
-        axios.get("http://localhost:5000/admin/users", {
+        axios.get("https://management-tool-1.onrender.com/admin/users", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("http://localhost:5000/admin/budgets/pending", {
+        axios.get("https://management-tool-1.onrender.com/admin/budgets/pending", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("http://localhost:5000/admin/stats", {
+        axios.get("https://management-tool-1.onrender.com/admin/stats", {
           headers: { Authorization: `Bearer ${token}` },
         })
       ]);
@@ -65,7 +65,7 @@ const AdminDashboard = () => {
   const handleBudgetAction = async (budgetId, action) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`http://localhost:5000/admin/budgets/${budgetId}/${action}`, null, {
+      await axios.post(`https://management-tool-1.onrender.com/admin/budgets/${budgetId}/${action}`, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchAdminData(); // Refresh data
@@ -79,7 +79,7 @@ const AdminDashboard = () => {
   const handleUserAction = async (userId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/admin/users/${userId}`, {
+      await axios.delete(`https://management-tool-1.onrender.com/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchAdminData(); // Refresh data
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
   const handleUserUpdate = async (userData) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:5000/admin/users/${userData.id}`, userData, {
+      await axios.put(`https://management-tool-1.onrender.com/admin/users/${userData.id}`, userData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchAdminData();

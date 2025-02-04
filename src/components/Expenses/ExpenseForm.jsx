@@ -49,7 +49,7 @@ export function ExpenseForm({ onClose, onSubmit }) {
           return; // Stop execution if no token
         }
   
-        const { data } = await axios.get("http://localhost:5000/budgets", {
+        const { data } = await axios.get("https://management-tool-1.onrender.com/budgets", {
           headers: { Authorization: `Bearer ${token}` }, // Attach token
         });
 
@@ -93,7 +93,7 @@ export function ExpenseForm({ onClose, onSubmit }) {
         }
 
         await axios.post(
-          "http://localhost:5000/expenses",
+          "https://management-tool-1.onrender.com/expenses",
           values,
           {
             headers: {

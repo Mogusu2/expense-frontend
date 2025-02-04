@@ -25,7 +25,7 @@ const EmployeeDashboard = () => {
         return;
       }
 
-      const response = await axios.get("http://localhost:5000/budgets", {
+      const response = await axios.get("https://management-tool-1.onrender.com/budgets", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -50,7 +50,7 @@ const EmployeeDashboard = () => {
         return;
       }
   
-      const response = await axios.get("http://localhost:5000/budgets", {
+      const response = await axios.get("https://management-tool-1.onrender.com/budgets", {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -85,7 +85,7 @@ const EmployeeDashboard = () => {
 
       console.log("Submitting Budget Data:", budgetData); // Debugging log
 
-      const response = await axios.post("http://localhost:5000/budgets", budgetData, {
+      const response = await axios.post("https://management-tool-1.onrender.com/budgets", budgetData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       });
 
@@ -108,7 +108,7 @@ const EmployeeDashboard = () => {
   
       console.log("Submitting Expense Data:", expenseData); // Debugging log
   
-      const response = await axios.post("http://localhost:5000/expenses", expenseData, {
+      const response = await axios.post("https://management-tool-1.onrender.com/expenses", expenseData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       });
   

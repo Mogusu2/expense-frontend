@@ -21,9 +21,9 @@ export const BudgetProvider = ({ children }) => {
       }
 
       console.log("Adding budget:", budget);
-      console.log("Sending request to: http://localhost:5000/budgets");
+      console.log("Sending request to: https://management-tool-1.onrender.com/budgets");
 
-      const { data } = await axios.post('http://localhost:5000/budgets', budget, {
+      const { data } = await axios.post('https://management-tool-1.onrender.com/budgets', budget, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -48,9 +48,9 @@ export const BudgetProvider = ({ children }) => {
           return;
         }
     
-        console.log("Fetching budgets from: http://localhost:5000/budgets");
+        console.log("Fetching budgets from: https://management-tool-1.onrender.com/budgets");
     
-        const { data } = await axios.get('http://localhost:5000/budgets', {
+        const { data } = await axios.get('https://management-tool-1.onrender.com/budgets', {
           headers: { Authorization: `Bearer ${token}` },
           data: null // <== Ensures no body is sent
         });
@@ -80,7 +80,7 @@ export const BudgetProvider = ({ children }) => {
       console.log("Updating budget with ID:", id);
       console.log("Sending updated data:", updatedBudget);
 
-      const { data } = await axios.put(`http://localhost:5000/budgets/${id}`, updatedBudget, {
+      const { data } = await axios.put(`https://management-tool-1.onrender.com/budgets/${id}`, updatedBudget, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -106,7 +106,7 @@ export const BudgetProvider = ({ children }) => {
 
       console.log("Deleting budget with ID:", id);
 
-      await axios.delete(`http://localhost:5000/budgets/${id}`, {
+      await axios.delete(`https://management-tool-1.onrender.com/budgets/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

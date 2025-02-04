@@ -42,7 +42,7 @@ export default function InvoiceBuilder({ open = false, onClose = () => {}, onInv
     onSubmit: async (values) => {
       setSubmitting(true);
       try {
-        const { data } = await axios.post('http://localhost:5000/invoices', {
+        const { data } = await axios.post('https://management-tool-1.onrender.com/invoices', {
           client_name: values.client_name,
           client_email: values.client_email,
           items: values.items.map(item => ({
